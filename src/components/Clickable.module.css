@@ -1,0 +1,17 @@
+.Clickable {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+.Clickable:hover {
+  text-decoration: none;
+}
+.Clickable:focus {
+  background-color: transparent;
+  outline: 0;
+  text-decoration: none;
+}

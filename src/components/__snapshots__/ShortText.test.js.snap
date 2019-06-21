@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`it renders 1`] = `
+<div
+  style={
+    Object {
+      "overflow": "hidden",
+      "textOverflow": "ellipsis",
+      "whiteSpace": "nowrap",
+      "width": 100,
+    }
+  }
+>
+  0x000000462a632b33612C857e2567B3a73aBf17Cb
+</div>
+`;

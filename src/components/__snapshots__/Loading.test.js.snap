@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`error 1`] = `
+<Message
+  negative={true}
+>
+  <MessageHeader>
+    Error
+  </MessageHeader>
+  <p>
+    Error
+  </p>
+  <Button
+    as="button"
+    onClick={[MockFunction]}
+  >
+    Retry
+  </Button>
+</Message>
+`;
+
+exports[`it renders 1`] = `
+<div>
+  children
+</div>
+`;
+
+exports[`loading 1`] = `
+<div>
+  Loading...
+</div>
+`;
+
+exports[`renderLoading 1`] = `
+<Message
+  negative={true}
+>
+  <MessageHeader>
+    Error
+  </MessageHeader>
+  <p>
+    Error
+  </p>
+  <Button
+    as="button"
+    onClick={[MockFunction]}
+  >
+    Retry
+  </Button>
+</Message>
+`;

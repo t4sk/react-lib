@@ -1,0 +1,18 @@
+.LinkButton {
+  background-color: transparent;
+  color: #4183c4;
+  border: none;
+  cursor: pointer;
+  display: inline;
+  margin: 0;
+  padding: 0;
+  text-decoration: none;
+}
+
+.LinkButton:hover {
+  color: #1e70bf;
+  text-decoration: none;
+}
+.LinkButton:focus {
+  text-decoration: none;
+}
