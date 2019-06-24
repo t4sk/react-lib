@@ -15,24 +15,24 @@ export default function useMutation(request, { name = "mutation" } = {}) {
           error: "",
         })
 
-        const { response, error } = await request(params)
+        try {
+          const response = await request(params)
 
-        if (error) {
           setState({
             ...state,
             saving: false,
-            error: error,
           })
 
-          return { error }
+          return { response }
+        } catch (error) {
+          setState({
+            ...state,
+            saving: false,
+            error: error.message,
+          })
+
+          return { error: error.message }
         }
-
-        setState({
-          ...state,
-          saving: false,
-        })
-
-        return { response }
       }
 
       return (
