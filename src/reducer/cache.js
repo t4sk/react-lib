@@ -1,5 +1,5 @@
-const UPDATE_ONE = "DATA/UPDATE_ONE"
-const UPDATE_MANY = "DATA/UPDATE_MANY"
+const UPDATE_ONE = "CACHE/UPDATE_ONE"
+const UPDATE_MANY = "CACHE/UPDATE_MANY"
 
 export const actions = {
   updateOne: ({ name, id, data }) => ({ type: UPDATE_ONE, name, id, data }),

@@ -1,4 +1,4 @@
-import { reducer, actions, selectors } from "./data"
+import { reducer, actions, selectors } from "./cache"
 
 describe("reducer", () => {
   test("updateOne", () => {
