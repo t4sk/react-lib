@@ -1,73 +1,62 @@
 import * as fetch from "./fetch"
 
-const QUERY_START = "QUERIES/QUERY_START"
-const QUERY_SUCCESS = "QUERIES/QUERY_SUCCESS"
-const QUERY_FAIL = "QUERIES/QUERY_FAIL"
+const START = "QUERIES/START"
+const SUCCESS = "QUERIES/SUCCESS"
+const FAIL = "QUERIES/FAIL"
 
 export const actions = {
-  start: ({ name, queryId }) => ({ type: QUERY_START, name, queryId }),
-  success: ({ name, queryId, response, byId = {} }) => ({
-    type: QUERY_SUCCESS,
-    name,
+  start: queryId => ({ type: START, queryId }),
+  success: ({ queryId, response }) => ({
+    type: SUCCESS,
     queryId,
     response,
-    byId,
   }),
-  fail: ({ name, queryId, error }) => ({
-    type: QUERY_FAIL,
-    name,
+  fail: ({ queryId, error }) => ({
+    type: FAIL,
     queryId,
     error,
   }),
 }
 
-const initialFetchState = fetch.reducer(undefined, {})
+const INITIAL_FETCH_STATE = fetch.reducer(undefined, {})
 
-function getFetchState(state, name, queryId) {
-  return (state[name] || {})[queryId] || initialFetchState
+function getFetchState(state, queryId) {
+  return state[queryId] || INITIAL_FETCH_STATE
 }
 
 export function reducer(state = {}, action) {
   switch (action.type) {
-    case QUERY_START: {
+    case START: {
+      const { queryId } = action
+
       return {
         ...state,
-        [action.name]: {
-          ...state[action.name],
-          [action.queryId]: fetch.reducer(
-            getFetchState(state, action.name, action.queryId),
-            fetch.actions.start()
-          ),
-          byId: {},
-        },
+        [queryId]: fetch.reducer(
+          getFetchState(state, queryId),
+          fetch.actions.start()
+        ),
       }
     }
-    case QUERY_SUCCESS: {
+    case SUCCESS: {
+      const { queryId, response } = action
+
       return {
         ...state,
-        [action.name]: {
-          ...state[action.name],
-          [action.queryId]: fetch.reducer(
-            getFetchState(state, action.name, action.queryId),
-            fetch.actions.success(action.response)
-          ),
-          byId: {
-            ...(state[action.name] || {}).byId,
-            ...action.byId,
-          },
-        },
+        [queryId]: fetch.reducer(
+          getFetchState(state, queryId),
+          fetch.actions.success(response)
+        ),
       }
     }
-    case QUERY_FAIL: {
+    case FAIL: {
+      const { queryId, error } = action
+
       return {
         ...state,
-        [action.name]: {
-          ...state[action.name],
-          [action.queryId]: fetch.reducer(
-            getFetchState(state, action.name, action.queryId),
-            fetch.actions.fail(action.error)
-          ),
-        },
+        [queryId]: fetch.reducer(
+          getFetchState(state, queryId),
+          fetch.actions.fail(error)
+        ),
       }
     }
     default:
@@ -76,6 +65,5 @@ export function reducer(state = {}, action) {
 }
 
 export const selectors = {
-  get: (state, name, queryId) => getFetchState(state, name, queryId),
-  getById: (state, { name, id }) => ((state[name] || {}).byId || {})[id],
+  get: (state, queryId) => getFetchState(state, queryId),
 }
