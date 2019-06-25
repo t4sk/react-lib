@@ -1,6 +1,15 @@
-const FETCH_START = "FETCH_START"
-const FETCH_SUCCESS = "FETCH_SUCCESS"
-const FETCH_FAIL = "FETCH_FAIL"
+const START = "FETCH/START"
+const SUCCESS = "FETCH/SUCCESS"
+const FAIL = "FETCH/FAIL"
+
+export const actions = {
+  start: () => ({ type: START }),
+  success: response => ({
+    type: SUCCESS,
+    response,
+  }),
+  fail: error => ({ type: FAIL, error }),
+}
 
 const initialState = {
   fetching: false,
@@ -10,19 +19,19 @@ const initialState = {
 
 export function reducer(state = initialState, action) {
   switch (action.type) {
-    case FETCH_START:
+    case START:
       return {
         ...state,
         fetching: true,
         error: "",
       }
-    case FETCH_SUCCESS:
+    case SUCCESS:
       return {
         ...state,
         fetching: false,
         response: action.response,
       }
-    case FETCH_FAIL:
+    case FAIL:
       return {
         ...state,
         fetching: false,
@@ -31,13 +40,4 @@ export function reducer(state = initialState, action) {
     default:
       return state
   }
-}
-
-export const actions = {
-  start: () => ({ type: FETCH_START }),
-  success: response => ({
-    type: FETCH_SUCCESS,
-    response,
-  }),
-  fail: error => ({ type: FETCH_FAIL, error }),
 }

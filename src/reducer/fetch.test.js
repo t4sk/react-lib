@@ -33,6 +33,4 @@ describe("reducer", () => {
       })
     )
   })
-
-  test("update cache", () => {})
 })
