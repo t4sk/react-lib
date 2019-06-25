@@ -2,7 +2,7 @@ import React from "react"
 import { shallow } from "enzyme"
 import { Loading } from "./Loading"
 
-const children = () => <div>children</div>
+const children = <div>children</div>
 const props = {
   loading: false,
   error: "",

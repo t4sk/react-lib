@@ -17,13 +17,13 @@ export function Loading(props) {
     )
   }
 
-  return props.children()
+  return props.children
 }
 
 Loading.propTypes = {
   loading: PropTypes.bool.isRequired,
   error: PropTypes.any,
-  children: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
   onClickRetry: PropTypes.func.isRequired,
   renderLoading: PropTypes.func.isRequired,
 }
