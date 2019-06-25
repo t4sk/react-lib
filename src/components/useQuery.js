@@ -28,6 +28,10 @@ export default function useQuery(
           return
         }
 
+        if (fetching) {
+          return
+        }
+
         start(queryId)
 
         try {
