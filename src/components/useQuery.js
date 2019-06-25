@@ -68,7 +68,7 @@ export default function useQuery(
 
     Query.propTypes = {
       fetching: PropTypes.bool.isRequired,
-      error: PropTypes.bool.isRequired,
+      error: PropTypes.string.isRequired,
       response: PropTypes.any,
       start: PropTypes.func.isRequired,
       success: PropTypes.func.isRequired,
