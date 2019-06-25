@@ -3,40 +3,40 @@ import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { actions, selectors } from "../reducer"
 
+function getQueryId(name, params) {
+  return `${name}-${JSON.stringify(params)}`
+}
+
 export default function useQuery(
   request,
   {
     name = "query",
-    getQueryId = props => 1,
-    getFromCache = props => false,
-    byId = response => ({}),
-    findFromId = props => ({}),
+    getParams = props => ({}),
+    getCache = (props, params) => undefined,
+    saveCache = (props, response) => {},
   } = {}
 ) {
   return Component => {
     function Query(props) {
-      const { start, success, fail, state, fromId, ...rest } = props
+      const { fetching, error, response, start, success, fail, ...rest } = props
 
-      const queryId = getQueryId(props)
+      const params = getParams(props)
+      const queryId = getQueryId(name, params)
 
       async function fetch() {
-        if (state.response && getFromCache(state, props)) {
+        if (getCache(props, params)) {
           return
         }
 
-        if (fromId) {
-          success({ name, queryId, response: fromId, byId: byId(fromId) })
-          return
-        }
-
-        start({ name, queryId })
+        start(queryId)
 
         try {
-          const response = await request(props)
+          const response = await request(params, props)
 
-          success({ name, queryId, response, byId: byId(response) })
+          success({ queryId, response })
+          saveCache(props, response)
         } catch (error) {
-          fail({ name, queryId, error })
+          fail({ queryId, error: error.message })
         }
       }
 
@@ -52,7 +52,9 @@ export default function useQuery(
           {...rest}
           {...{
             [name]: {
-              ...state,
+              fetching,
+              error,
+              response,
               fetch,
             },
           }}
@@ -61,17 +63,21 @@ export default function useQuery(
     }
 
     Query.propTypes = {
+      fetching: PropTypes.bool.isRequired,
+      error: PropTypes.bool.isRequired,
+      response: PropTypes.any,
       start: PropTypes.func.isRequired,
       success: PropTypes.func.isRequired,
       fail: PropTypes.func.isRequired,
-      state: PropTypes.object.isRequired,
     }
 
     return connect(
-      (state, props) => ({
-        state: selectors.queries.get(state.queries, name, getQueryId(props)),
-        fromId: selectors.queries.getById(state.queries, findFromId(props)),
-      }),
+      (state, props) => {
+        const params = getParams(props)
+        const queryId = getQueryId(name, params)
+
+        return selectors.queries.get(state.queries, queryId)
+      },
       actions.queries
     )(Query)
   }
