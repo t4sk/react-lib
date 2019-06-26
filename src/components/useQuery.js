@@ -60,6 +60,7 @@ export default function useQuery(
               error,
               response,
               fetch,
+              params,
             },
           }}
         />
