@@ -1,8 +1,14 @@
 import React from "react"
+
+import { ToastContainer, toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
 import logo from "./logo.svg"
 import "./App.css"
 
 export function App() {
+  toast("Wow so easy !")
+
   return (
     <div className="App">
       <header className="App-header">
@@ -19,6 +25,8 @@ export function App() {
           Learn React
         </a>
       </header>
+
+      <ToastContainer />
     </div>
   )
 }
