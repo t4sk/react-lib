@@ -24,7 +24,7 @@ export default function useQuery(
       const queryId = getQueryId(name, params)
 
       async function fetch() {
-        if (getCache(props, params)) {
+        if (response && getCache(props, params)) {
           return
         }
 
