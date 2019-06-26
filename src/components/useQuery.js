@@ -13,7 +13,7 @@ export default function useQuery(
     name = "query",
     getParams = props => ({}),
     getCache = (props, params) => undefined,
-    saveCache = (props, response) => {},
+    saveCache = (props, response, params) => {},
   } = {}
 ) {
   return Component => {
@@ -38,7 +38,7 @@ export default function useQuery(
           const response = await request(params, props)
 
           success({ queryId, response })
-          saveCache(props, response)
+          saveCache(props, response, params)
         } catch (error) {
           fail({ queryId, error: error.message })
         }
