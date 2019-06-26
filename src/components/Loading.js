@@ -10,8 +10,7 @@ export function Loading(props) {
   if (props.error) {
     return (
       <Message negative>
-        <Message.Header>Error</Message.Header>
-        <p>{`${props.error}`}</p>
+        <p>{props.error}</p>
         <Button onClick={props.onClickRetry}>Retry</Button>
       </Message>
     )
@@ -22,7 +21,7 @@ export function Loading(props) {
 
 Loading.propTypes = {
   loading: PropTypes.bool.isRequired,
-  error: PropTypes.any,
+  error: PropTypes.string.isRequired,
   children: PropTypes.node,
   onClickRetry: PropTypes.func.isRequired,
   renderLoading: PropTypes.func.isRequired,
