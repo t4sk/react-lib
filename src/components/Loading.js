@@ -23,7 +23,7 @@ export function Loading(props) {
 Loading.propTypes = {
   loading: PropTypes.bool.isRequired,
   error: PropTypes.any,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
   onClickRetry: PropTypes.func.isRequired,
   renderLoading: PropTypes.func.isRequired,
 }

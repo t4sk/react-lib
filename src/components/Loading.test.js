@@ -15,6 +15,12 @@ test("it renders", () => {
   expect(component).toMatchSnapshot()
 })
 
+test("null", () => {
+  const component = shallow(<Loading {...props}>{null}</Loading>)
+
+  expect(component).toMatchSnapshot()
+})
+
 test("loading", () => {
   const component = shallow(
     <Loading {...props} loading={true}>
