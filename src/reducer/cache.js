@@ -66,14 +66,8 @@ export function reducer(state = {}, action) {
 }
 
 export const selectors = {
-  getOne(state, name, id, defaultVal) {
-    const val = getById(state, name, id)
-
-    if (val == undefined) {
-      return defaultVal
-    }
-
-    return val
+  getOne(state, name, id) {
+    return getById(state, name, id)
   },
   getMany(state, name) {
     const ids = getIds(state, name)
