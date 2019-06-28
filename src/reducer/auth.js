@@ -1,4 +1,4 @@
-const SET = "AUTH/SET"
+const SAVE = "AUTH/SAVE"
 const REMOVE = "AUTH/REMOVE"
 
 const INITIAL_STATE = {
@@ -8,7 +8,7 @@ const INITIAL_STATE = {
 
 export function reducer(state = INITIAL_STATE, action = {}) {
   switch (action.type) {
-    case SET: {
+    case SAVE: {
       const { token, user } = action
 
       return {
@@ -24,8 +24,8 @@ export function reducer(state = INITIAL_STATE, action = {}) {
 }
 
 export const actions = {
-  set: ({ token, user }) => ({ type: SET, token, user }),
-  remove: () => ({ type: REMOVE }),
+  saveAuth: ({ token, user }) => ({ type: SAVE, token, user }),
+  removeAuth: () => ({ type: REMOVE }),
 }
 
 export const selectors = {

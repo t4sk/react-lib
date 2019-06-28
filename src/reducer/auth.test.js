@@ -4,8 +4,8 @@ const token = "foo"
 const user = { email: "foo@email.com" }
 
 describe("reducer", () => {
-  test("set", () => {
-    const action = actions.set({ token, user })
+  test("save", () => {
+    const action = actions.saveAuth({ token, user })
 
     expect(reducer(undefined, action)).toEqual({
       token,
@@ -14,8 +14,8 @@ describe("reducer", () => {
   })
 
   test("remove", () => {
-    let state = reducer(undefined, actions.set({ token, user }))
-    const action = actions.remove()
+    let state = reducer(undefined, actions.saveAuth({ token, user }))
+    const action = actions.removeAuth()
 
     expect(reducer(state, action)).toEqual({
       token: "",
@@ -27,7 +27,7 @@ describe("reducer", () => {
 describe("selectors", () => {
   describe("isAuthenticated", () => {
     test("returns true", () => {
-      const state = reducer(undefined, actions.set({ token, user }))
+      const state = reducer(undefined, actions.saveAuth({ token, user }))
       expect(selectors.isAuthenticated(state)).toEqual(true)
     })
 
