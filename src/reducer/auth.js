@@ -1,32 +1,31 @@
-const LOG_IN = "AUTH/LOG_IN"
-const LOG_OUT = "AUTH/LOG_OUT"
+const SET = "AUTH/SET"
+const REMOVE = "AUTH/REMOVE"
 
-const initialState = {
+const INITIAL_STATE = {
   token: "",
   user: undefined,
 }
 
-export function reducer(state = initialState, action = {}) {
+export function reducer(state = INITIAL_STATE, action = {}) {
   switch (action.type) {
-    case LOG_IN:
+    case SET: {
+      const { token, user } = action
+
       return {
-        ...state,
-        token: action.token,
-        user: {
-          ...state.user,
-          ...action.user,
-        },
+        token,
+        user,
       }
-    case LOG_OUT:
-      return initialState
+    }
+    case REMOVE:
+      return INITIAL_STATE
     default:
       return state
   }
 }
 
 export const actions = {
-  logIn: ({ token, user }) => ({ type: LOG_IN, token, user }),
-  logOut: () => ({ type: LOG_OUT }),
+  set: ({ token, user }) => ({ type: SET, token, user }),
+  remove: () => ({ type: REMOVE }),
 }
 
 export const selectors = {
