@@ -2,8 +2,13 @@ const UPDATE_ONE = "CACHE/UPDATE_ONE"
 const UPDATE_MANY = "CACHE/UPDATE_MANY"
 
 export const actions = {
-  updateOne: ({ name, id, data }) => ({ type: UPDATE_ONE, name, id, data }),
-  updateMany: ({ name, data = [] }) => ({ type: UPDATE_MANY, name, data }),
+  updateOneCache: ({ name, id, data }) => ({
+    type: UPDATE_ONE,
+    name,
+    id,
+    data,
+  }),
+  updateManyCache: ({ name, data = [] }) => ({ type: UPDATE_MANY, name, data }),
 }
 
 function getIds(state, name) {

@@ -5,13 +5,13 @@ const SUCCESS = "QUERIES/SUCCESS"
 const FAIL = "QUERIES/FAIL"
 
 export const actions = {
-  start: queryId => ({ type: START, queryId }),
-  success: ({ queryId, response }) => ({
+  queryStart: queryId => ({ type: START, queryId }),
+  querySuccess: ({ queryId, response }) => ({
     type: SUCCESS,
     queryId,
     response,
   }),
-  fail: ({ queryId, error }) => ({
+  queryFail: ({ queryId, error }) => ({
     type: FAIL,
     queryId,
     error,
@@ -33,7 +33,7 @@ export function reducer(state = {}, action) {
         ...state,
         [queryId]: fetch.reducer(
           getFetchState(state, queryId),
-          fetch.actions.start()
+          fetch.actions.fetchStart()
         ),
       }
     }
@@ -44,7 +44,7 @@ export function reducer(state = {}, action) {
         ...state,
         [queryId]: fetch.reducer(
           getFetchState(state, queryId),
-          fetch.actions.success(response)
+          fetch.actions.fetchSuccess(response)
         ),
       }
     }
@@ -55,7 +55,7 @@ export function reducer(state = {}, action) {
         ...state,
         [queryId]: fetch.reducer(
           getFetchState(state, queryId),
-          fetch.actions.fail(error)
+          fetch.actions.fetchFail(error)
         ),
       }
     }

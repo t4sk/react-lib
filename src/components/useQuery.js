@@ -18,7 +18,15 @@ export default function useQuery(
 ) {
   return Component => {
     function Query(props) {
-      const { fetching, error, response, start, success, fail, ...rest } = props
+      const {
+        fetching,
+        error,
+        response,
+        queryStart,
+        querySuccess,
+        queryFail,
+        ...rest
+      } = props
 
       const params = getParams(props)
       const queryId = getQueryId(name, params)
@@ -32,15 +40,15 @@ export default function useQuery(
           return
         }
 
-        start(queryId)
+        queryStart(queryId)
 
         try {
           const response = await request(params, props)
 
-          success({ queryId, response })
+          querySuccess({ queryId, response })
           saveCache(props, response, params)
         } catch (error) {
-          fail({ queryId, error: error.message })
+          queryFail({ queryId, error: error.message })
         }
       }
 
@@ -71,9 +79,9 @@ export default function useQuery(
       fetching: PropTypes.bool.isRequired,
       error: PropTypes.string.isRequired,
       response: PropTypes.any,
-      start: PropTypes.func.isRequired,
-      success: PropTypes.func.isRequired,
-      fail: PropTypes.func.isRequired,
+      queryStart: PropTypes.func.isRequired,
+      querySuccess: PropTypes.func.isRequired,
+      queryFail: PropTypes.func.isRequired,
     }
 
     return connect(

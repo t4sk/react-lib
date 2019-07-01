@@ -3,12 +3,12 @@ const SUCCESS = "FETCH/SUCCESS"
 const FAIL = "FETCH/FAIL"
 
 export const actions = {
-  start: () => ({ type: START }),
-  success: response => ({
+  fetchStart: () => ({ type: START }),
+  fetchSuccess: response => ({
     type: SUCCESS,
     response,
   }),
-  fail: error => ({ type: FAIL, error }),
+  fetchFail: error => ({ type: FAIL, error }),
 }
 
 const initialState = {

@@ -2,7 +2,7 @@ import { reducer, actions } from "./fetch"
 
 describe("reducer", () => {
   test("fetch start", () => {
-    const action = actions.start()
+    const action = actions.fetchStart()
 
     expect(reducer(undefined, action)).toEqual({
       fetching: true,
@@ -13,7 +13,7 @@ describe("reducer", () => {
 
   test("fetch success", () => {
     const response = { foo: "bar" }
-    const action = actions.success(response)
+    const action = actions.fetchSuccess(response)
 
     expect(reducer(undefined, action)).toEqual({
       fetching: false,
@@ -24,7 +24,7 @@ describe("reducer", () => {
 
   test("fetch fail", () => {
     const error = "error"
-    const action = actions.fail(error)
+    const action = actions.fetchFail(error)
 
     expect(reducer(undefined, action)).toEqual(
       expect.objectContaining({
