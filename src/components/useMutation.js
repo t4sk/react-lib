@@ -21,6 +21,7 @@ export default function useMutation(request, { name = "mutation" } = {}) {
           setState({
             ...state,
             saving: false,
+            error: "",
           })
 
           return { response }
