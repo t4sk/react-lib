@@ -22,7 +22,7 @@ function useDebounce(val, delay) {
   return debouncedVal
 }
 
-export default function useQuery(
+export default function withQuery(
   request,
   {
     name = "query",

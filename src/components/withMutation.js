@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-export default function useMutation(request, { name = "mutation" } = {}) {
+export default function withMutation(request, { name = "mutation" } = {}) {
   return Component => {
     function Mutation(props) {
       const [state, setState] = useState({
