@@ -1,19 +1,36 @@
-import React, { useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { connect } from "react-redux"
 import { actions, selectors } from "../reducer"
 
-function getQueryId(name, params) {
-  return `${name}-${JSON.stringify(params)}`
+function useDebounce(val, delay) {
+  const [debouncedVal, setDebouncedVal] = useState(val)
+
+  useEffect(
+    () => {
+      const timer = setTimeout(() => {
+        setDebouncedVal(val)
+      }, delay)
+
+      return () => {
+        clearTimeout(timer)
+      }
+    },
+    [val]
+  )
+
+  return debouncedVal
 }
 
 export default function useQuery(
   request,
   {
     name = "query",
+    getQueryId = (name, params) => name,
     getParams = props => ({}),
-    getCache = (props, params) => undefined,
+    getCache = (props, response, params) => undefined,
     saveCache = (props, response, params) => {},
+    debounce = 0,
   } = {}
 ) {
   return Component => {
@@ -30,9 +47,10 @@ export default function useQuery(
 
       const params = getParams(props)
       const queryId = getQueryId(name, params)
+      const paramId = useDebounce(JSON.stringify(params), debounce)
 
       async function fetch() {
-        if (response && getCache(props, params)) {
+        if (response && getCache(props, response, params)) {
           return
         }
 
@@ -56,7 +74,7 @@ export default function useQuery(
         () => {
           fetch()
         },
-        [queryId]
+        [paramId]
       )
 
       return (
