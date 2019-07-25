@@ -1,4 +1,4 @@
-.LinkButton {
+.Component {
   background-color: transparent;
   color: #4183c4;
   border: none;
@@ -9,10 +9,10 @@
   text-decoration: none;
 }
 
-.LinkButton:hover {
+.Component:hover {
   color: #1e70bf;
   text-decoration: none;
 }
-.LinkButton:focus {
+.Component:focus {
   text-decoration: none;
 }

@@ -6,7 +6,7 @@ export function LinkButton(props) {
   const { onClick, children } = props
 
   return (
-    <button className={styles.LinkButton} onClick={onClick}>
+    <button className={styles.Component} onClick={onClick}>
       {children}
     </button>
   )
