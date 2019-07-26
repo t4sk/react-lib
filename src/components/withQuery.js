@@ -28,7 +28,7 @@ export default function withQuery(
     name = "query",
     getQueryId = (name, params) => name,
     getParams = props => ({}),
-    getCache = (props, response, params) => undefined,
+    getCache = (props, response, params) => false,
     saveCache = (props, response, params) => {},
     debounce = 0,
   } = {}
