@@ -9,7 +9,7 @@ export function InputError(props) {
 }
 
 InputError.propTypes = {
-  error: PropTypes.string.isRequired,
+  error: PropTypes.string,
 }
 
 export default InputError
