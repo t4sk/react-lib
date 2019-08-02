@@ -2,7 +2,7 @@
 
 exports[`it renders 1`] = `
 <button
-  className="LinkButton"
+  className="Component"
   onClick={[MockFunction]}
 >
   Click Me

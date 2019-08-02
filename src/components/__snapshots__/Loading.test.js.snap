@@ -4,9 +4,6 @@ exports[`error 1`] = `
 <Message
   negative={true}
 >
-  <MessageHeader>
-    Error
-  </MessageHeader>
   <p>
     Error
   </p>
@@ -31,13 +28,12 @@ exports[`loading 1`] = `
 </div>
 `;
 
+exports[`null 1`] = `""`;
+
 exports[`renderLoading 1`] = `
 <Message
   negative={true}
 >
-  <MessageHeader>
-    Error
-  </MessageHeader>
   <p>
     Error
   </p>
