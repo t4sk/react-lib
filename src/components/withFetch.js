@@ -25,7 +25,7 @@ function useDebounce(val, delay) {
 export default function withFetch(
   request,
   {
-    name = "query",
+    name = "fetch",
     getFetchId = (name, params) => name,
     getParams = props => ({}),
     shouldFetchFromCache = (props, params) => false,
@@ -109,7 +109,7 @@ export default function withFetch(
 
         return selectors.fetch.getFetchState(state.fetch, fetchId)
       },
-      actions.queries
+      actions.fetch
     )(WithFetch)
   }
 }
