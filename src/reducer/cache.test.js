@@ -6,7 +6,11 @@ describe("reducer", () => {
     const id = "123"
     const data = { bar: "123" }
 
-    const action = actions.updateOneCache({ name, id, data })
+    const action = actions.updateOneCache({
+      name,
+      id,
+      data,
+    })
 
     expect(reducer(undefined, action)).toEqual({
       [name]: {
@@ -29,7 +33,10 @@ describe("reducer", () => {
       },
     ]
 
-    const action = actions.updateManyCache({ name, data })
+    const action = actions.updateManyCache({
+      name,
+      data,
+    })
 
     expect(reducer(undefined, action)).toEqual({
       [name]: {
@@ -44,7 +51,7 @@ describe("reducer", () => {
 })
 
 describe("selectors", () => {
-  test("getOne", () => {
+  test("findOneCache", () => {
     const action = actions.updateOneCache({
       id: "1",
       name: "foo",
@@ -52,10 +59,10 @@ describe("selectors", () => {
     })
     const state = reducer(undefined, action)
 
-    expect(selectors.getOne(state, "foo", "1")).toEqual({ id: 1 })
+    expect(selectors.findOneCache(state, "foo", "1")).toEqual({ id: 1 })
   })
 
-  test("getMany", () => {
+  test("findManyCache", () => {
     const data = [
       {
         id: 1,
@@ -68,6 +75,6 @@ describe("selectors", () => {
     const action = actions.updateManyCache({ name: "foo", data })
     const state = reducer(undefined, action)
 
-    expect(selectors.getMany(state, "foo")).toEqual(data)
+    expect(selectors.findManyCache(state, "foo")).toEqual(data)
   })
 })

@@ -1,36 +1,53 @@
-import { reducer, actions } from "./fetch"
+import { reducer, actions, selectors } from "./fetch"
 
 describe("reducer", () => {
-  test("fetch start", () => {
-    const action = actions.fetchStart()
+  test("start", () => {
+    const fetchId = "foo"
 
+    const action = actions.fetchStart({ fetchId })
     expect(reducer(undefined, action)).toEqual({
-      fetching: true,
-      error: "",
-      response: undefined,
+      [fetchId]: {
+        fetching: true,
+        error: "",
+      },
     })
   })
 
-  test("fetch success", () => {
+  test("success", () => {
+    const fetchId = "foo"
     const response = { foo: "bar" }
-    const action = actions.fetchSuccess(response)
 
+    const action = actions.fetchSuccess({ fetchId, response })
     expect(reducer(undefined, action)).toEqual({
-      fetching: false,
-      error: "",
-      response,
+      [fetchId]: {
+        fetching: false,
+        error: "",
+        response,
+      },
     })
   })
 
-  test("fetch fail", () => {
+  test("fail", () => {
+    const fetchId = "foo"
     const error = "error"
-    const action = actions.fetchFail(error)
 
-    expect(reducer(undefined, action)).toEqual(
-      expect.objectContaining({
+    const action = actions.fetchFail({ fetchId, error })
+    expect(reducer(undefined, action)).toEqual({
+      [fetchId]: {
         fetching: false,
         error,
-      })
-    )
+      },
+    })
+  })
+})
+
+describe("selectors", () => {
+  test("getFetchState", () => {
+    const state = reducer(undefined, {})
+
+    expect(selectors.getFetchState(state, "foo", "bar")).toEqual({
+      fetching: false,
+      error: "",
+    })
   })
 })

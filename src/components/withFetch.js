@@ -22,35 +22,35 @@ function useDebounce(val, delay) {
   return debouncedVal
 }
 
-export default function withQuery(
+export default function withFetch(
   request,
   {
     name = "query",
-    getQueryId = (name, params) => name,
+    getFetchId = (name, params) => name,
     getParams = props => ({}),
-    getCache = (props, response, params) => false,
+    shouldFetchFromCache = (props, params) => false,
     saveCache = (props, response, params) => {},
     debounce = 0,
   } = {}
 ) {
   return Component => {
-    function Query(props) {
+    function WithFetch(props) {
       const {
         fetching,
         error,
         response,
-        queryStart,
-        querySuccess,
-        queryFail,
+        fetchStart,
+        fetchSuccess,
+        fetchFail,
         ...rest
       } = props
 
       const params = getParams(props)
-      const queryId = getQueryId(name, params)
+      const fetchId = getFetchId(name, params)
       const paramId = useDebounce(JSON.stringify(params), debounce)
 
       async function fetch() {
-        if (response && getCache(props, response, params)) {
+        if (response && shouldFetchFromCache(props, params)) {
           return
         }
 
@@ -58,15 +58,15 @@ export default function withQuery(
           return
         }
 
-        queryStart(queryId)
+        fetchStart({ fetchId })
 
         try {
           const response = await request(params, props)
 
-          querySuccess({ queryId, response })
+          fetchSuccess({ fetchId, response })
           saveCache(props, response, params)
         } catch (error) {
-          queryFail({ queryId, error: error.message })
+          fetchFail({ fetchId, error: error.message })
         }
       }
 
@@ -84,8 +84,8 @@ export default function withQuery(
             [name]: {
               fetching,
               error,
-              response,
               fetch,
+              response,
               params,
             },
           }}
@@ -93,23 +93,23 @@ export default function withQuery(
       )
     }
 
-    Query.propTypes = {
+    WithFetch.propTypes = {
       fetching: PropTypes.bool.isRequired,
       error: PropTypes.string.isRequired,
       response: PropTypes.any,
-      queryStart: PropTypes.func.isRequired,
-      querySuccess: PropTypes.func.isRequired,
-      queryFail: PropTypes.func.isRequired,
+      fetchStart: PropTypes.func.isRequired,
+      fetchSuccess: PropTypes.func.isRequired,
+      fetchFail: PropTypes.func.isRequired,
     }
 
     return connect(
       (state, props) => {
         const params = getParams(props)
-        const queryId = getQueryId(name, params)
+        const fetchId = getFetchId(name, params)
 
-        return selectors.queries.get(state.queries, queryId)
+        return selectors.fetch.getFetchState(state.fetch, fetchId)
       },
       actions.queries
-    )(Query)
+    )(WithFetch)
   }
 }

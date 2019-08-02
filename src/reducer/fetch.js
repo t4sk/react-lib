@@ -3,41 +3,64 @@ const SUCCESS = "FETCH/SUCCESS"
 const FAIL = "FETCH/FAIL"
 
 export const actions = {
-  fetchStart: () => ({ type: START }),
-  fetchSuccess: response => ({
+  fetchStart: ({ fetchId }) => ({ type: START, fetchId }),
+  fetchSuccess: ({ fetchId, response }) => ({
     type: SUCCESS,
+    fetchId,
     response,
   }),
-  fetchFail: error => ({ type: FAIL, error }),
+  fetchFail: ({ fetchId, error }) => ({ type: FAIL, fetchId, error }),
 }
 
-const initialState = {
-  fetching: false,
-  error: "",
-  response: undefined,
+const INITIAL_FETCH_STATE = { fetching: false, error: "" }
+
+function getFetchState(state, fetchId) {
+  return state[fetchId] || INITIAL_FETCH_STATE
 }
 
-export function reducer(state = initialState, action) {
+export function reducer(state = {}, action) {
   switch (action.type) {
-    case START:
+    case START: {
+      const { fetchId } = action
+
       return {
         ...state,
-        fetching: true,
-        error: "",
+        [fetchId]: {
+          ...getFetchState(state, fetchId),
+          fetching: true,
+          error: "",
+        },
       }
-    case SUCCESS:
+    }
+    case SUCCESS: {
+      const { fetchId, response } = action
+
       return {
         ...state,
-        fetching: false,
-        response: action.response,
+        [fetchId]: {
+          ...getFetchState(state, fetchId),
+          fetching: false,
+          response,
+        },
       }
-    case FAIL:
+    }
+    case FAIL: {
+      const { fetchId, error } = action
+
       return {
         ...state,
-        fetching: false,
-        error: action.error,
+        [fetchId]: {
+          ...getFetchState(state, fetchId),
+          fetching: false,
+          error,
+        },
       }
+    }
     default:
       return state
   }
+}
+
+export const selectors = {
+  getFetchState: (state, fetchId) => state[fetchId] || INITIAL_FETCH_STATE,
 }

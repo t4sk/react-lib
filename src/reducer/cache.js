@@ -2,35 +2,72 @@ const UPDATE_ONE = "CACHE/UPDATE_ONE"
 const UPDATE_MANY = "CACHE/UPDATE_MANY"
 
 export const actions = {
-  updateOneCache: ({ name, id, data }) => ({
+  updateOneCache: ({
+    name,
+    id,
+    data,
+    update = (doc, changes) => ({
+      ...doc,
+      ...changes,
+    }),
+  }) => ({
     type: UPDATE_ONE,
     name,
     id,
     data,
+    update,
   }),
-  updateManyCache: ({ name, data = [] }) => ({ type: UPDATE_MANY, name, data }),
+  updateManyCache: ({
+    name,
+    data = [],
+    update = (doc, changes) => ({
+      ...doc,
+      ...changes,
+    }),
+  }) => ({
+    type: UPDATE_MANY,
+    name,
+    data,
+    update,
+  }),
 }
 
-function getIds(state, name) {
+function _unique(arr = []) {
+  const inserted = {}
+
+  return arr.reduce((_arr, item) => {
+    if (inserted[item]) {
+      return _arr
+    }
+
+    inserted[item] = true
+    _arr.push(item)
+
+    return _arr
+  }, [])
+}
+
+function _getIds(state, name) {
   return (state[name] || {}).ids || []
 }
 
-function getById(state, name, id) {
+function _getById(state, name, id) {
   return ((state[name] || {}).byId || {})[id]
 }
 
 export function reducer(state = {}, action) {
   switch (action.type) {
     case UPDATE_ONE: {
-      const { id, name, data } = action
+      const { id, name, data, update } = action
+
       const ids = [
-        ...getIds(state, name),
-        ...(getById(state, name, id) ? [] : [id]),
+        ..._getIds(state, name),
+        ...(_getById(state, name, id) ? [] : [id]),
       ]
 
       const byId = {
         ...((state[name] || {}).byId || {}),
-        [id]: data,
+        [id]: update(_getById(state, name, id), data),
       }
 
       return {
@@ -42,26 +79,27 @@ export function reducer(state = {}, action) {
       }
     }
     case UPDATE_MANY: {
-      const { name, data } = action
+      const { name, data, update } = action
 
-      const ids = [
-        ...getIds(state, name),
-        ...data.map(({ id }) => id).filter(id => !getById(state, name, id)),
-      ]
+      const ids = _unique([
+        ..._getIds(state, name),
+        ...data.map(({ id }) => id),
+      ])
 
       const byId = {
-        ...((state[name] || {}).byId || {}),
-        ...data.reduce((map, item) => {
-          map[item.id] = item
-          return map
+        ...state[name],
+        ...data.reduce((updates, item) => {
+          updates[item.id] = update(_getById(state, name, item.id), item)
+
+          return updates
         }, {}),
       }
 
       return {
         ...state,
         [name]: {
-          byId,
           ids,
+          byId,
         },
       }
     }
@@ -71,12 +109,12 @@ export function reducer(state = {}, action) {
 }
 
 export const selectors = {
-  getOne(state, name, id) {
-    return getById(state, name, id)
+  findOneCache(state, name, id) {
+    return _getById(state, name, id)
   },
-  getMany(state, name) {
-    const ids = getIds(state, name)
+  findManyCache(state, name) {
+    const ids = _getIds(state, name)
 
-    return ids.map(id => getById(state, name, id))
+    return ids.map(id => _getById(state, name, id))
   },
 }
