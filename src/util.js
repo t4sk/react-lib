@@ -32,3 +32,7 @@ export function get(val, keys, defaultVal) {
 
   return val
 }
+
+export function unique(items = []) {
+  return [...new Set(items)]
+}

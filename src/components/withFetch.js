@@ -6,18 +6,15 @@ import { actions, selectors } from "../reducer"
 function useDebounce(val, delay) {
   const [debouncedVal, setDebouncedVal] = useState(val)
 
-  useEffect(
-    () => {
-      const timer = setTimeout(() => {
-        setDebouncedVal(val)
-      }, delay)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedVal(val)
+    }, delay)
 
-      return () => {
-        clearTimeout(timer)
-      }
-    },
-    [val]
-  )
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [val])
 
   return debouncedVal
 }
@@ -28,7 +25,7 @@ export default function withFetch(
     name = "fetch",
     getFetchId = (name, params) => name,
     getParams = props => ({}),
-    shouldFetchFromCache = (props, params) => false,
+    shouldFetchFromCache = (props, response, params) => false,
     saveCache = (props, response, params) => {},
     debounce = 0,
   } = {}
@@ -50,7 +47,7 @@ export default function withFetch(
       const paramId = useDebounce(JSON.stringify(params), debounce)
 
       async function fetch() {
-        if (response && shouldFetchFromCache(props, params)) {
+        if (shouldFetchFromCache(props, response, params)) {
           return
         }
 
@@ -70,12 +67,9 @@ export default function withFetch(
         }
       }
 
-      useEffect(
-        () => {
-          fetch()
-        },
-        [paramId]
-      )
+      useEffect(() => {
+        fetch()
+      }, [paramId])
 
       return (
         <Component
