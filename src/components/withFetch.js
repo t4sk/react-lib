@@ -25,7 +25,7 @@ export default function withFetch(
     name = "fetch",
     getFetchId = (name, params) => name,
     getParams = props => ({}),
-    shouldFetchFromCache = (props, response, params) => false,
+    shouldGetCache = (props, response, params) => false,
     saveCache = (props, response, params) => {},
     debounce = 0,
   } = {}
@@ -47,7 +47,7 @@ export default function withFetch(
       const paramId = useDebounce(JSON.stringify(params), debounce)
 
       async function fetch() {
-        if (shouldFetchFromCache(props, response, params)) {
+        if (shouldGetCache(props, response, params)) {
           return
         }
 
