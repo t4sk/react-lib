@@ -12,7 +12,13 @@ export const actions = {
   fetchFail: ({ fetchId, error }) => ({ type: FAIL, fetchId, error }),
 }
 
-const INITIAL_FETCH_STATE = { fetching: false, error: "" }
+const INITIAL_FETCH_STATE = {
+  fetching: false,
+  error: "",
+  response: undefined,
+  fetchedAt: "",
+  respondedAt: "",
+}
 
 function getFetchState(state, fetchId) {
   return state[fetchId] || INITIAL_FETCH_STATE
@@ -35,17 +41,23 @@ export function reducer(state = {}, action) {
     case SUCCESS: {
       const { fetchId, response } = action
 
+      const now = new Date().toISOString()
+
       return {
         ...state,
         [fetchId]: {
           ...getFetchState(state, fetchId),
           fetching: false,
           response,
+          fetchedAt: now,
+          respondedAt: now,
         },
       }
     }
     case FAIL: {
       const { fetchId, error } = action
+
+      const now = new Date().toISOString()
 
       return {
         ...state,
@@ -53,6 +65,7 @@ export function reducer(state = {}, action) {
           ...getFetchState(state, fetchId),
           fetching: false,
           error,
+          fetchedAt: now,
         },
       }
     }

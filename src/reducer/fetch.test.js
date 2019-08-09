@@ -9,6 +9,9 @@ describe("reducer", () => {
       [fetchId]: {
         fetching: true,
         error: "",
+        response: undefined,
+        fetchedAt: "",
+        respondedAt: "",
       },
     })
   })
@@ -18,13 +21,17 @@ describe("reducer", () => {
     const response = { foo: "bar" }
 
     const action = actions.fetchSuccess({ fetchId, response })
-    expect(reducer(undefined, action)).toEqual({
-      [fetchId]: {
-        fetching: false,
-        error: "",
-        response,
-      },
-    })
+    expect(reducer(undefined, action)).toEqual(
+      expect.objectContaining({
+        [fetchId]: {
+          fetching: false,
+          error: "",
+          response,
+          fetchedAt: expect.any(String),
+          respondedAt: expect.any(String),
+        },
+      })
+    )
   })
 
   test("fail", () => {
@@ -32,12 +39,17 @@ describe("reducer", () => {
     const error = "error"
 
     const action = actions.fetchFail({ fetchId, error })
-    expect(reducer(undefined, action)).toEqual({
-      [fetchId]: {
-        fetching: false,
-        error,
-      },
-    })
+    expect(reducer(undefined, action)).toEqual(
+      expect.objectContaining({
+        [fetchId]: {
+          fetching: false,
+          error,
+          response: undefined,
+          respondedAt: "",
+          fetchedAt: expect.any(String),
+        },
+      })
+    )
   })
 })
 
@@ -48,6 +60,9 @@ describe("selectors", () => {
     expect(selectors.getFetchState(state, "foo", "bar")).toEqual({
       fetching: false,
       error: "",
+      response: undefined,
+      fetchedAt: "",
+      respondedAt: "",
     })
   })
 })
