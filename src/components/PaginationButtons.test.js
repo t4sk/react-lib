@@ -6,8 +6,12 @@ const props = {
   count: 100,
   skip: 40,
   limit: 20,
-  onChangePage: jest.fn(),
+  onClick: jest.fn(),
 }
+
+beforeEach(() => {
+  props.onClick.mockClear()
+})
 
 test("it renders", () => {
   const component = shallow(<PaginationButtons {...props} />)
@@ -26,57 +30,62 @@ test("render last page", () => {
 
   expect(component).toMatchSnapshot()
 })
+test("on click first", () => {
+  const component = shallow(<PaginationButtons {...props} />)
 
-describe("events", () => {
-  beforeEach(() => {
-    props.onChangePage.mockClear()
+  component
+    .find("Button")
+    .first()
+    .simulate("click")
+
+  expect(props.onClick.mock.calls.length).toEqual(1)
+  expect(props.onClick.mock.calls[0][0]).toEqual({
+    page: 1,
+    skip: 0,
   })
+})
 
-  test("on click first", () => {
-    const component = shallow(<PaginationButtons {...props} />)
+test("on click prev", () => {
+  const component = shallow(<PaginationButtons {...props} />)
 
-    component
-      .find("Button")
-      .first()
-      .simulate("click")
+  component
+    .find("Button")
+    .at(1)
+    .simulate("click")
 
-    expect(props.onChangePage.mock.calls.length).toEqual(1)
-    expect(props.onChangePage.mock.calls[0][0]).toEqual(1)
+  expect(props.onClick.mock.calls.length).toEqual(1)
+  expect(props.onClick.mock.calls[0][0]).toEqual({
+    page: 2,
+    skip: props.limit,
   })
+})
 
-  test("on click prev", () => {
-    const component = shallow(<PaginationButtons {...props} />)
+test("on click next", () => {
+  const component = shallow(<PaginationButtons {...props} />)
 
-    component
-      .find("Button")
-      .at(1)
-      .simulate("click")
+  component
+    .find("Button")
+    .at(2)
+    .simulate("click")
 
-    expect(props.onChangePage.mock.calls.length).toEqual(1)
-    expect(props.onChangePage.mock.calls[0][0]).toEqual(2)
+  expect(props.onClick.mock.calls.length).toEqual(1)
+  expect(props.onClick.mock.calls[0][0]).toEqual({
+    page: 4,
+    skip: 3 * props.limit,
   })
+})
 
-  test("on click next", () => {
-    const component = shallow(<PaginationButtons {...props} />)
+test("on click last", () => {
+  const component = shallow(<PaginationButtons {...props} />)
 
-    component
-      .find("Button")
-      .at(2)
-      .simulate("click")
+  component
+    .find("Button")
+    .last()
+    .simulate("click")
 
-    expect(props.onChangePage.mock.calls.length).toEqual(1)
-    expect(props.onChangePage.mock.calls[0][0]).toEqual(4)
-  })
-
-  test("on click last", () => {
-    const component = shallow(<PaginationButtons {...props} />)
-
-    component
-      .find("Button")
-      .last()
-      .simulate("click")
-
-    expect(props.onChangePage.mock.calls.length).toEqual(1)
-    expect(props.onChangePage.mock.calls[0][0]).toEqual(5)
+  expect(props.onClick.mock.calls.length).toEqual(1)
+  expect(props.onClick.mock.calls[0][0]).toEqual({
+    page: 5,
+    skip: 4 * props.limit,
   })
 })
