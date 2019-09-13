@@ -1,20 +1,18 @@
-import React from "react"
 import PropTypes from "prop-types"
-import moment from "moment"
+import moment from "moment-timezone"
+
+const DEFAULT_FORMAT = "YYYY-MM-DD HH:mm"
 
 export function DateFormat(props) {
-  const { format, date } = props
+  const { date, timeZone, format = DEFAULT_FORMAT } = props
 
-  return moment(date).format(format)
-}
-
-DateFormat.defaultProps = {
-  format: "YYYY-MM-DD HH:mm:ss",
+  return moment.tz(date, timeZone).format(format)
 }
 
 DateFormat.propTypes = {
-  format: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
+  timeZone: PropTypes.string.isRequired,
+  format: PropTypes.string,
 }
 
 export default DateFormat
