@@ -16,7 +16,7 @@ export function Loading(props) {
     )
   }
 
-  return props.children
+  return props.children || null
 }
 
 Loading.propTypes = {

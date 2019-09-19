@@ -1,21 +1,37 @@
-const UPDATE = "CACHE/UPDATE"
+import * as byId from "./byId"
+
+const UPDATE_ONE = "CACHE/UPDATE_ONE"
+const UPDATE_MANY = "CACHE/UPDATE_MANY"
 
 export const actions = {
-  updateCache: ({ key, update = val => val }) => ({
-    type: UPDATE,
-    key,
+  updateOneCache: ({ name, id, update }) => ({
+    type: UPDATE_ONE,
+    name,
+    id,
     update,
   }),
+  updateManyCache: ({ name, update }) => ({ type: UPDATE_MANY, name, update }),
 }
 
 export function reducer(state = {}, action) {
   switch (action.type) {
-    case UPDATE: {
-      const { key, update } = action
+    case UPDATE_ONE: {
+      const { name, id, update } = action
 
       return {
         ...state,
-        [key]: update(state[key]),
+        [name]: byId.reducer(
+          state[name],
+          byId.actions.updateOne({ id, update })
+        ),
+      }
+    }
+    case UPDATE_MANY: {
+      const { name, update } = action
+
+      return {
+        ...state,
+        [name]: byId.reducer(state[name], byId.actions.updateMany({ update })),
       }
     }
     default:
@@ -24,11 +40,6 @@ export function reducer(state = {}, action) {
 }
 
 export const selectors = {
-  getCache(state, key, defaultVal) {
-    if (state[key] == undefined) {
-      return defaultVal
-    }
-
-    return state[key]
-  },
+  getOne: (state, name, id) => (state[name] ? state[name][id] : undefined),
+  getMany: (state, name) => state[name] || {},
 }
