@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import { Transition, Message, Icon } from "semantic-ui-react"
 
-export function Errors(props) {
+export function ErrorMessages(props) {
   const { errors } = props
 
   return (
@@ -11,17 +11,17 @@ export function Errors(props) {
       animation="fade down"
       duration={500}
     >
-      {errors.length > 1 ? (
-        <Message error={true} list={[errors]} />
-      ) : (
+      {errors.length == 1 ? (
         <Message error={true}>{errors[0]}</Message>
+      ) : (
+        <Message error={true} list={errors} />
       )}
     </Transition>
   )
 }
 
-Errors.propTypes = {
+ErrorMessages.propTypes = {
   errors: PropTypes.arrayOf(PropTypes.string).isRequired,
 }
 
-export default Errors
+export default ErrorMessages
