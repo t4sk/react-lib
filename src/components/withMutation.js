@@ -8,7 +8,7 @@ export default function withMutation(request, { name = "mutation" } = {}) {
         error: "",
       })
 
-      async function save(params) {
+      async function save(...params) {
         setState({
           ...state,
           saving: true,
@@ -16,7 +16,7 @@ export default function withMutation(request, { name = "mutation" } = {}) {
         })
 
         try {
-          const response = await request(params)
+          const response = await request(...params)
 
           setState({
             ...state,
