@@ -22,7 +22,7 @@ function useDebounce(val, delay) {
 export default function withFetch(
   request,
   {
-    name = "fetch",
+    name = "query",
     getFetchId = (name, params) => name,
     getParams = props => ({}),
     shouldFetch = (props, response, params) => true,
@@ -31,7 +31,7 @@ export default function withFetch(
   } = {}
 ) {
   return Component => {
-    function WithFetch(props) {
+    function Query(props) {
       const {
         fetching,
         error,
@@ -91,7 +91,7 @@ export default function withFetch(
       )
     }
 
-    WithFetch.propTypes = {
+    Query.propTypes = {
       fetching: PropTypes.bool.isRequired,
       error: PropTypes.string.isRequired,
       response: PropTypes.any,
@@ -110,6 +110,6 @@ export default function withFetch(
         return selectors.fetch.getFetchState(state.fetch, fetchId)
       },
       actions.fetch
-    )(WithFetch)
+    )(Query)
   }
 }
