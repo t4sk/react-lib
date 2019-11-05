@@ -2,7 +2,7 @@ import React, { useState } from "react"
 
 export default function withParams(initialParams = {}) {
   return Component => {
-    function WithParams(props) {
+    function QueryParams(props) {
       const [params, setParams] = useState(initialParams)
 
       function onChangeParams(newParams) {
@@ -17,6 +17,6 @@ export default function withParams(initialParams = {}) {
       )
     }
 
-    return WithParams
+    return QueryParams
   }
 }
