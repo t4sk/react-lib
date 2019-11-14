@@ -2,12 +2,12 @@ import React, { useState } from "react"
 import PropTypes from "prop-types"
 import * as form from "../lib/form"
 
-export default function withForm(schema, initialInputs) {
+export default function withForm(schema, getIntialInputs = props => ({})) {
   return Component => {
     function Form(props) {
       const { error, submitting } = props
 
-      const [inputs, setInput] = useState(initialInputs)
+      const [inputs, setInput] = useState(getIntialInputs)
       const [errors, setErrors] = useState({})
 
       function onChange(name, value) {

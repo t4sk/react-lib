@@ -1,18 +1,24 @@
 import React, { useState } from "react"
 
-export default function withMutation(request, { name = "mutation" } = {}) {
+export default function withAsyncRequest(request, { name = "request" } = {}) {
   return Component => {
-    function Mutation(props) {
+    function AsyncRequest(props) {
       const [state, setState] = useState({
-        saving: false,
+        pending: false,
+        sentAt: undefined,
+        receivedAt: undefined,
         error: "",
+        response: undefined,
       })
 
-      async function save(...params) {
+      async function send(...params) {
         setState({
           ...state,
-          saving: true,
+          pending: true,
+          sentAt: new Date(),
           error: "",
+          receivedAt: undefined,
+          response: undefined,
         })
 
         try {
@@ -20,15 +26,17 @@ export default function withMutation(request, { name = "mutation" } = {}) {
 
           setState({
             ...state,
-            saving: false,
-            error: "",
+            pending: false,
+            receivedAt: new Date(),
+            response,
           })
 
           return { response }
         } catch (error) {
           setState({
             ...state,
-            saving: false,
+            pending: false,
+            receivedAt: new Date(),
             error: error.message,
           })
 
@@ -42,13 +50,13 @@ export default function withMutation(request, { name = "mutation" } = {}) {
           {...{
             [name]: {
               ...state,
-              save,
+              send,
             },
           }}
         />
       )
     }
 
-    return Mutation
+    return AsyncRequest
   }
 }
