@@ -17,6 +17,13 @@ export default function withForm(schema, getIntialInputs = props => ({})) {
         })
       }
 
+      function onError(name, error) {
+        setErrors({
+          ...errors,
+          [name]: error,
+        })
+      }
+
       function onSubmit() {
         if (submitting) {
           return
@@ -41,6 +48,7 @@ export default function withForm(schema, getIntialInputs = props => ({})) {
           errors={errors}
           valid={!error && Object.keys(errors).length == 0}
           onChange={onChange}
+          onError={onError}
           {...props}
           onSubmit={onSubmit}
         />

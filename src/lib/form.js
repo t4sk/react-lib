@@ -8,25 +8,26 @@ export function isInteger(x) {
   return !isNaN(int) && int.toString() == x.toString()
 }
 
-export function parse(schema, inputs) {
-  return Object.entries(inputs).reduce((_inputs, [key, val]) => {
-    _inputs[key] = schema[key].parse(val)
+export function parse(schema, values) {
+  return Object.entries(schema.inputs).reduce((_values, [key, input]) => {
+    _values[key] = input.parse(values[key])
 
-    return _inputs
+    return _values
   }, {})
 }
 
-export function validate(schema, inputs) {
-  return Object.entries(schema).reduce((errors, [key, field]) => {
-    const val = inputs[key]
+export function validate(schema, values) {
+  // validate inputs
+  const inputs = schema.inputs || {}
 
-    const _errors = field.validations
+  const inputErrors = Object.entries(inputs).reduce((errors, [key, input]) => {
+    const val = values[key]
+
+    const _errors = input.validations
       .map(({ validate, getErrorMessage }) => {
-        if (validate(val)) {
-          return
+        if (!validate(val)) {
+          return getErrorMessage(val)
         }
-
-        return getErrorMessage(val)
       })
       .filter(error => !!error)
 
@@ -37,4 +38,25 @@ export function validate(schema, inputs) {
 
     return errors
   }, {})
+
+  if (Object.keys(inputErrors).length > 0) {
+    return inputErrors
+  }
+
+  // validate form
+  const form = schema.form || { validataions: [] }
+
+  const formErrors = form.validations
+    .map(({ validate, getErrorMessage }) => {
+      if (!validate(values)) {
+        return getErrorMessage(values)
+      }
+    })
+    .filter(error => !!error)
+
+  if (formErrors.length > 0) {
+    return { form: formErrors }
+  }
+
+  return {}
 }
