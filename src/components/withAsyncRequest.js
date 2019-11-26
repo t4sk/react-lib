@@ -12,20 +12,22 @@ export default function withAsyncRequest(request, { name = "request" } = {}) {
       })
 
       async function send(...params) {
-        setState({
+        const newState = {
           ...state,
           pending: true,
           sentAt: new Date(),
           error: "",
           receivedAt: undefined,
           response: undefined,
-        })
+        }
+
+        setState(newState)
 
         try {
           const response = await request(...params)
 
           setState({
-            ...state,
+            ...newState,
             pending: false,
             receivedAt: new Date(),
             response,
@@ -34,7 +36,7 @@ export default function withAsyncRequest(request, { name = "request" } = {}) {
           return { response }
         } catch (error) {
           setState({
-            ...state,
+            ...newState,
             pending: false,
             receivedAt: new Date(),
             error: error.message,

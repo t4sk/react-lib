@@ -44,7 +44,7 @@ export function validate(schema, values) {
   }
 
   // validate form
-  const form = schema.form || { validataions: [] }
+  const form = schema.form || { validations: [] }
 
   const formErrors = form.validations
     .map(({ validate, getErrorMessage }) => {
