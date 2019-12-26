@@ -1,49 +1,102 @@
-import React, { useState } from "react"
+import React, { useRef, useReducer, useEffect } from "react"
+
+const SEND = "REQUEST/SEND"
+const SUCCESS = "REQUEST/SUCCESS"
+const ERROR = "REQUEST/ERROR"
+const RESET = "REQUEST/RESET"
+
+export const actions = {
+  onSend: () => ({ type: SEND }),
+  onSuccess: response => ({ type: SUCCESS, response }),
+  onError: error => ({ type: ERROR, error }),
+  reset: () => ({ type: RESET }),
+}
+
+const INITIAL_STATE = {
+  pending: false,
+  sent: false,
+  received: false,
+  error: "",
+  response: undefined,
+}
+
+export function reducer(state = INITIAL_STATE, action) {
+  switch (action.type) {
+    case SEND: {
+      return {
+        ...state,
+        pending: true,
+        sent: true,
+        error: "",
+        received: false,
+        response: undefined,
+      }
+    }
+    case SUCCESS: {
+      const { response } = action
+
+      return {
+        ...state,
+        pending: false,
+        received: true,
+        response,
+      }
+    }
+    case ERROR: {
+      const { error } = action
+
+      return {
+        ...state,
+        pending: false,
+        received: true,
+        error,
+      }
+    }
+    case RESET:
+      return INITIAL_STATE
+    default:
+      return state
+  }
+}
 
 export default function withAsyncRequest(request, { name = "request" } = {}) {
   return Component => {
     function AsyncRequest(props) {
-      const [state, setState] = useState({
-        pending: false,
-        sentAt: undefined,
-        receivedAt: undefined,
-        error: "",
-        response: undefined,
-      })
+      const isMounted = useRef(true)
+      const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
 
-      async function send(...params) {
-        const newState = {
-          ...state,
-          pending: true,
-          sentAt: new Date(),
-          error: "",
-          receivedAt: undefined,
-          response: undefined,
+      useEffect(() => {
+        return () => {
+          isMounted.current = false
+        }
+      }, [])
+
+      function _dispatch(action) {
+        if (!isMounted.current) {
+          return
         }
 
-        setState(newState)
+        dispatch(action)
+      }
+
+      async function send(...params) {
+        _dispatch(actions.onSend())
 
         try {
           const response = await request(...params)
 
-          setState({
-            ...newState,
-            pending: false,
-            receivedAt: new Date(),
-            response,
-          })
+          _dispatch(actions.onSuccess(response))
 
           return { response }
         } catch (error) {
-          setState({
-            ...newState,
-            pending: false,
-            receivedAt: new Date(),
-            error: error.message,
-          })
+          _dispatch(actions.onError(error.message))
 
           return { error: error.message }
         }
+      }
+
+      function reset() {
+        _dispatch(INITIAL_STATE)
       }
 
       return (
@@ -53,6 +106,7 @@ export default function withAsyncRequest(request, { name = "request" } = {}) {
             [name]: {
               ...state,
               send,
+              reset,
             },
           }}
         />
