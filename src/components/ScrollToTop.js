@@ -2,22 +2,17 @@ import React, { useEffect } from "react"
 import PropTypes from "prop-types"
 import { withRouter } from "react-router-dom"
 
-function ScrollToTop({ history }) {
+function ScrollToTop({ location }) {
   useEffect(() => {
-    const unlisten = history.listen(() => {
-      window.scrollTo(0, 0)
-    })
-    return () => {
-      unlisten()
-    }
-  }, [])
+    window.scrollTo(0, 0)
+  }, [location.pathname])
 
   return null
 }
 
 ScrollToTop.propTypes = {
-  history: PropTypes.shape({
-    listen: PropTypes.func.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
   }).isRequired,
 }
 

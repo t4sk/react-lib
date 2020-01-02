@@ -14,8 +14,6 @@ export const actions = {
 
 const INITIAL_STATE = {
   pending: false,
-  sent: false,
-  received: false,
   error: "",
   response: undefined,
 }
@@ -26,9 +24,7 @@ export function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         pending: true,
-        sent: true,
         error: "",
-        received: false,
         response: undefined,
       }
     }
@@ -38,7 +34,6 @@ export function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         pending: false,
-        received: true,
         response,
       }
     }
@@ -48,7 +43,6 @@ export function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         pending: false,
-        received: true,
         error,
       }
     }

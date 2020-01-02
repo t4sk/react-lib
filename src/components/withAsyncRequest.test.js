@@ -4,9 +4,7 @@ describe("reducer", () => {
   test("onSend", () => {
     expect(reducer(undefined, actions.onSend())).toEqual({
       pending: true,
-      sent: true,
       error: "",
-      received: false,
       response: undefined,
     })
   })
@@ -17,9 +15,7 @@ describe("reducer", () => {
 
     expect(reducer(state, actions.onSuccess(response))).toEqual({
       pending: false,
-      sent: true,
       error: "",
-      received: true,
       response,
     })
   })
@@ -30,9 +26,7 @@ describe("reducer", () => {
 
     expect(reducer(state, actions.onError(error))).toEqual({
       pending: false,
-      sent: true,
       error,
-      received: true,
       response: undefined,
     })
   })
