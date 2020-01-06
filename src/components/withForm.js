@@ -1,6 +1,58 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
-import * as form from "../lib/form"
+
+export function parse(schema, values) {
+  return Object.entries(schema.inputs).reduce((_values, [key, input]) => {
+    _values[key] = input.parse(values[key])
+
+    return _values
+  }, {})
+}
+
+export function validate(schema, values) {
+  // validate inputs
+  const inputs = schema.inputs || {}
+
+  const inputErrors = Object.entries(inputs).reduce((errors, [key, input]) => {
+    const val = values[key]
+
+    const _errors = input.validations
+      .map(({ validate, getErrorMessage }) => {
+        if (!validate(val)) {
+          return getErrorMessage(val)
+        }
+      })
+      .filter(error => !!error)
+
+    if (_errors.length > 0) {
+      // return only the first error
+      errors[key] = _errors[0]
+    }
+
+    return errors
+  }, {})
+
+  if (Object.keys(inputErrors).length > 0) {
+    return inputErrors
+  }
+
+  // validate form
+  const form = schema.form || { validations: [] }
+
+  const formErrors = form.validations
+    .map(({ validate, getErrorMessage }) => {
+      if (!validate(values)) {
+        return getErrorMessage(values)
+      }
+    })
+    .filter(error => !!error)
+
+  if (formErrors.length > 0) {
+    return { form: formErrors }
+  }
+
+  return {}
+}
 
 export default function withForm(schema, getInitialInputs = props => ({})) {
   return Component => {
@@ -31,8 +83,8 @@ export default function withForm(schema, getInitialInputs = props => ({})) {
 
         setErrors({})
 
-        const _inputs = form.parse(schema, inputs)
-        const _errors = form.validate(schema, _inputs)
+        const _inputs = parse(schema, inputs)
+        const _errors = validate(schema, _inputs)
 
         if (Object.keys(_errors).length > 0) {
           setErrors(_errors)

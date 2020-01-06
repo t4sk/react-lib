@@ -1,4 +1,14 @@
-import { compose, chunk, get, transduce, map, filter, append } from "./util"
+import {
+  compose,
+  chunk,
+  get,
+  diff,
+  getUnixTimeStamp
+  transduce,
+  map,
+  filter,
+  append,
+} from "./util"
 
 test("compose", () => {
   expect(
@@ -25,6 +35,24 @@ describe("get", () => {
   test("default", () => {
     expect(get({}, ["a", "b", 0], 1)).toEqual(1)
   })
+})
+
+test("diff", () => {
+  expect(diff({ a: 1, b: 2 }, { a: 1, b: 2 })).toEqual({})
+
+  expect(diff({ a: 2, b: 2 }, { a: 1, b: 2 })).toEqual({ a: 2 })
+
+  expect(diff({ a: 1, b: 2 }, { a: 1, b: 2, c: 3 })).toEqual({ c: undefined })
+})
+
+test("get unix time stamp", () => {
+  const date = new Date()
+  const now = Math.floor(date.getTime() / 1000)
+
+  expect(getUnixTimeStamp(date)).toEqual(now)
+  // test now
+  expect(getUnixTimeStamp()).toBeGreaterThanOrEqual(now)
+  expect(getUnixTimeStamp()).toBeLessThanOrEqual(now + 1)
 })
 
 describe("transduce", () => {

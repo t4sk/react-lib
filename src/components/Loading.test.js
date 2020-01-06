@@ -2,7 +2,7 @@ import React from "react"
 import { shallow } from "enzyme"
 import { Loading } from "./Loading"
 
-const children = <div>children</div>
+const children = () => <div>children</div>
 const props = {
   loading: false,
   error: "",
@@ -16,7 +16,7 @@ test("it renders", () => {
 })
 
 test("null", () => {
-  const component = shallow(<Loading {...props}>{null}</Loading>)
+  const component = shallow(<Loading {...props}>{() => null}</Loading>)
 
   expect(component).toMatchSnapshot()
 })
@@ -24,6 +24,17 @@ test("null", () => {
 test("loading", () => {
   const component = shallow(
     <Loading {...props} loading={true}>
+      {children}
+    </Loading>
+  )
+
+  expect(component).toMatchSnapshot()
+})
+
+test("render loading", () => {
+  const renderLoading = () => <div>Custom loading message...</div>
+  const component = shallow(
+    <Loading {...props} error="Error" renderLoading={renderLoading}>
       {children}
     </Loading>
   )
@@ -41,10 +52,10 @@ test("error", () => {
   expect(component).toMatchSnapshot()
 })
 
-test("renderLoading", () => {
-  const renderLoading = () => <div>Custom loading message...</div>
+test("render error", () => {
+  const renderError = props => <div>Custom {props.error} message...</div>
   const component = shallow(
-    <Loading {...props} error="Error" renderLoading={renderLoading}>
+    <Loading {...props} error="Error" renderError={renderError}>
       {children}
     </Loading>
   )

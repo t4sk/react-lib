@@ -53,11 +53,16 @@ export function reducer(state = INITIAL_STATE, action) {
   }
 }
 
-export default function withAsyncRequest(request, { name = "request" } = {}) {
+export default function withAsyncRequest(request, settings = {}) {
+  const { name = "request", getInitialState = props => ({}) } = settings
+
   return Component => {
     function AsyncRequest(props) {
       const isMounted = useRef(true)
-      const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
+      const [state, dispatch] = useReducer(reducer, {
+        ...INITIAL_STATE,
+        ...getInitialState(props),
+      })
 
       useEffect(() => {
         return () => {

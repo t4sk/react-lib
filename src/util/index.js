@@ -33,6 +33,22 @@ export function get(val, keys, defaultVal) {
   return val
 }
 
+export function diff(newData, oldData) {
+  const updates = {}
+
+  for (const key of Object.keys(oldData)) {
+    if (newData[key] != oldData[key]) {
+      updates[key] = newData[key]
+    }
+  }
+
+  return updates
+}
+
+export function getUnixTimeStamp(date = new Date()) {
+  return Math.floor(date.getTime() / 1000)
+}
+
 // transducer
 export function append(arr, x) {
   arr.push(x)
