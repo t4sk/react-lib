@@ -10,13 +10,13 @@ const BUTTON_PROPS = {
 }
 
 export function PaginationButtons(props) {
-  const { count, skip, limit } = props
+  const { count, skip, limit, onChangePage } = props
 
   const total = Math.max(Math.ceil(count / limit), 1)
   const current = Math.floor(skip / limit) + 1
 
   function onClick(page) {
-    props.onClick({
+    onChangePage({
       page,
       skip: (page - 1) * limit,
     })
@@ -68,7 +68,7 @@ PaginationButtons.propTypes = {
   count: PropTypes.number.isRequired,
   skip: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onChangePage: PropTypes.func.isRequired,
 }
 
 export default PaginationButtons

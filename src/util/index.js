@@ -49,6 +49,10 @@ export function getUnixTimeStamp(date = new Date()) {
   return Math.floor(date.getTime() / 1000)
 }
 
+export function timeout(ms = 1000) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
 // transducer
 export function append(arr, x) {
   arr.push(x)

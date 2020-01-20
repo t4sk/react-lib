@@ -3,24 +3,29 @@ import PropTypes from "prop-types"
 
 export function parse(schema, values) {
   return Object.entries(schema.inputs).reduce((_values, [key, input]) => {
-    _values[key] = input.parse(values[key])
+    const { parse = val => val } = input
+
+    _values[key] = parse(values[key])
 
     return _values
   }, {})
 }
 
-export function validate(schema, values) {
+export function validate(schema, values, props) {
   // validate inputs
   const inputs = schema.inputs || {}
 
   const inputErrors = Object.entries(inputs).reduce((errors, [key, input]) => {
     const val = values[key]
 
-    const _errors = input.validations
+    const { validations = [] } = input
+
+    const _errors = validations
       .map(({ validate, getErrorMessage }) => {
-        if (!validate(val)) {
-          return getErrorMessage(val)
+        if (validate(val, values)) {
+          return ""
         }
+        return getErrorMessage(val)
       })
       .filter(error => !!error)
 
@@ -40,15 +45,37 @@ export function validate(schema, values) {
   const form = schema.form || { validations: [] }
 
   const formErrors = form.validations
-    .map(({ validate, getErrorMessage }) => {
-      if (!validate(values)) {
-        return getErrorMessage(values)
+    .map(
+      ({
+        validate,
+        getErrorMessage = values => "",
+        getInputErrors = values => ({}),
+      }) => {
+        if (validate(values, props)) {
+          return null
+        }
+        return {
+          form: getErrorMessage(values),
+          inputs: getInputErrors(values),
+        }
       }
-    })
+    )
     .filter(error => !!error)
 
   if (formErrors.length > 0) {
-    return { form: formErrors }
+    return formErrors.reduce(
+      (errors, error) => {
+        if (error.form) {
+          errors.form.push(error.form)
+        }
+
+        return {
+          ...error.inputs,
+          form: errors.form,
+        }
+      },
+      { form: [] }
+    )
   }
 
   return {}
@@ -84,7 +111,7 @@ export default function withForm(schema, getInitialInputs = props => ({})) {
         setErrors({})
 
         const _inputs = parse(schema, inputs)
-        const _errors = validate(schema, _inputs)
+        const _errors = validate(schema, _inputs, props)
 
         if (Object.keys(_errors).length > 0) {
           setErrors(_errors)
@@ -98,7 +125,7 @@ export default function withForm(schema, getInitialInputs = props => ({})) {
         <Component
           inputs={inputs}
           errors={errors}
-          valid={!error && Object.keys(errors).length == 0}
+          valid={!error && Object.keys(errors).length === 0}
           onChange={onChange}
           onError={onError}
           {...props}

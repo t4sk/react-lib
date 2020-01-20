@@ -13,7 +13,7 @@ export function Loading(props) {
     return renderError(props)
   }
 
-  return props.children()
+  return children()
 }
 
 Loading.propTypes = {

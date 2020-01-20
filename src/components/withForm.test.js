@@ -9,7 +9,7 @@ function notEmpty(str) {
 function isInteger(x) {
   const int = parseInt(x)
 
-  return !isNaN(int) && int.toString() == x.toString()
+  return !isNaN(int) && int.toString() === x.toString()
 }
 
 const SCHEMA = {
@@ -20,6 +20,16 @@ const SCHEMA = {
         {
           validate: notEmpty,
           getErrorMessage: value => "Cannot be blank",
+        },
+        {
+          // test validation from other inputs
+          validate: (val, values) => {
+            if (values.str2 === "test") {
+              return val === "abc"
+            }
+            return true
+          },
+          getErrorMessage: value => "str should equal abc when str2 equal test",
         },
       ],
     },
@@ -45,12 +55,25 @@ const SCHEMA = {
         },
       ],
     },
+    // input to test default parser and no validation
+    val: {
+      parse: val => val,
+    },
   },
   form: {
     validations: [
       {
-        validate: values => values.str == values.str2,
-        getErrorMessage: values => `Not equal`,
+        validate: values => values.str === values.str2,
+        getInputErrors: values => ({
+          str: "not equal to str2",
+          str2: "not equal to str",
+        }),
+        getErrorMessage: values => "str != str2",
+      },
+      // validation with props
+      {
+        validate: (values, props) => values.str === props.foo,
+        getErrorMessage: values => `Not equal to props`,
       },
     ],
   },
@@ -60,6 +83,11 @@ const INPUTS = {
   str: "  abc  ",
   str2: "abc",
   num: "1",
+  val: "123",
+}
+
+const PROPS = {
+  foo: "abc",
 }
 
 test("parse", () => {
@@ -67,6 +95,7 @@ test("parse", () => {
     str: "abc",
     str2: "abc",
     num: 1,
+    val: "123",
   })
 })
 
@@ -74,33 +103,59 @@ describe("validate", () => {
   const inputs = parse(SCHEMA, INPUTS)
 
   test("valid", () => {
-    expect(validate(SCHEMA, inputs)).toEqual({})
+    expect(validate(SCHEMA, inputs, PROPS)).toEqual({})
   })
 
   test("invalid inputs", () => {
     expect(
-      validate(SCHEMA, {
-        ...inputs,
-        str: "   ",
-      })
+      validate(
+        SCHEMA,
+        {
+          ...inputs,
+          str: "   ",
+        },
+        PROPS
+      )
     ).toEqual({
       str: "Cannot be blank",
     })
 
     expect(
-      validate(SCHEMA, {
-        ...inputs,
-        num: "",
-      })
+      validate(
+        SCHEMA,
+        {
+          ...inputs,
+          str: "123",
+          str2: "test",
+        },
+        PROPS
+      )
+    ).toEqual({
+      str: "str should equal abc when str2 equal test",
+    })
+
+    expect(
+      validate(
+        SCHEMA,
+        {
+          ...inputs,
+          num: "",
+        },
+        PROPS
+      )
     ).toEqual({
       num: "Invalid number",
     })
 
     expect(
-      validate(SCHEMA, {
-        ...inputs,
-        num: "0",
-      })
+      validate(
+        SCHEMA,
+        {
+          ...inputs,
+          num: "0",
+        },
+        PROPS
+      )
     ).toEqual({
       num: "Must be greater than 0",
     })
@@ -108,12 +163,24 @@ describe("validate", () => {
 
   test("invalid form", () => {
     expect(
-      validate(SCHEMA, {
-        ...inputs,
-        str2: "foo",
-      })
+      validate(
+        SCHEMA,
+        {
+          ...inputs,
+          str2: "foo",
+        },
+        PROPS
+      )
     ).toEqual({
-      form: ["Not equal"],
+      form: ["str != str2"],
+      str: "not equal to str2",
+      str2: "not equal to str",
+    })
+  })
+
+  test("validate form with props", () => {
+    expect(validate(SCHEMA, inputs, { ...PROPS, foo: "bar" })).toEqual({
+      form: ["Not equal to props"],
     })
   })
 })
@@ -124,6 +191,7 @@ const props = {
   submitting: false,
   error: "",
   onSubmit: jest.fn(),
+  ...PROPS,
 }
 
 beforeEach(() => {
@@ -135,6 +203,7 @@ test("it renders", () => {
     str: "",
     str2: "",
     num: 123,
+    val: 1,
   }))(TestComponent)
 
   const component = shallow(<WithForm {...props} />)
@@ -147,6 +216,7 @@ test("get initial state", () => {
     str: "foo",
     str2: "bar",
     num: 123,
+    val: 1,
   }))(TestComponent)
 
   const component = shallow(<WithForm {...props} />)
@@ -155,6 +225,7 @@ test("get initial state", () => {
     str: "foo",
     str2: "bar",
     num: 123,
+    val: 1,
   })
 })
 
@@ -163,6 +234,7 @@ test("valid", () => {
     str: "",
     str2: "",
     num: 123,
+    val: 1,
   }))(TestComponent)
 
   const component = shallow(<WithForm {...props} />)
@@ -175,6 +247,7 @@ test("invalid", () => {
     str: "",
     str2: "",
     num: 123,
+    val: 1,
   }))(TestComponent)
 
   const component = shallow(<WithForm {...props} error="error" />)
@@ -187,6 +260,7 @@ test("on change", () => {
     str: "",
     str2: "",
     num: 123,
+    val: 1,
   }))(TestComponent)
 
   const component = shallow(<WithForm {...props} />)
@@ -201,6 +275,7 @@ test("on error", () => {
     str: "",
     str2: "",
     num: 123,
+    val: 1,
   }))(TestComponent)
 
   const component = shallow(<WithForm {...props} />)
@@ -218,6 +293,7 @@ describe("on submit", () => {
       str: "",
       str2: "",
       num: 123,
+      val: 1,
     }))(TestComponent)
 
     component = shallow(<WithForm {...props} />)
@@ -228,6 +304,7 @@ describe("on submit", () => {
       str: "",
       str2: "",
       num: 123,
+      val: 1,
     }))(TestComponent)
 
     component = shallow(<WithForm {...props} submitting={true} />)
@@ -238,17 +315,18 @@ describe("on submit", () => {
   })
 
   test("valid", () => {
-    component.simulate("change", "str", "foo")
-    component.simulate("change", "str2", "foo")
+    component.simulate("change", "str", PROPS.foo)
+    component.simulate("change", "str2", PROPS.foo)
     component.simulate("change", "num", 456)
 
     component.simulate("submit")
 
     expect(props.onSubmit.mock.calls.length).toEqual(1)
     expect(props.onSubmit.mock.calls[0][0]).toEqual({
-      str: "foo",
-      str2: "foo",
+      str: PROPS.foo,
+      str2: PROPS.foo,
       num: 456,
+      val: 1,
     })
     expect(component.props().valid).toEqual(true)
     expect(component.props().errors).toEqual({})
