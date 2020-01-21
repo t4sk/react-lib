@@ -1,40 +1,17 @@
-import React from "react"
-import PropTypes from "prop-types"
-import { connect } from "react-redux"
-import { actions } from "../reducer"
+import React, { createContext } from "react"
 
-// TODO time zone context?
+export const TimeZoneContext = createContext(
+  Intl.DateTimeFormat().resolvedOptions().timeZone
+)
 
 export default function withTimeZone(Component) {
   function TimeZone(props) {
-    const { set, ...rest } = props
-
-    function getTimeZone() {
-      return Intl.DateTimeFormat().resolvedOptions().timeZone || ""
-    }
-
-    function setTimeZone(timeZone) {
-      set(timeZone)
-    }
-
     return (
-      <Component
-        {...rest}
-        setTimeZone={setTimeZone}
-        getTimeZone={getTimeZone}
-      />
+      <TimeZoneContext.Consumer>
+        {timeZone => <Component {...props} timeZone={timeZone} />}
+      </TimeZoneContext.Consumer>
     )
   }
 
-  TimeZone.propTypes = {
-    timeZone: PropTypes.string.isRequired,
-    set: PropTypes.func.isRequired,
-  }
-
-  return connect(
-    state => ({
-      timeZone: state.timeZone,
-    }),
-    actions.timeZone
-  )(TimeZone)
+  return TimeZone
 }
