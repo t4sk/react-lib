@@ -1,6 +1,6 @@
 import React from "react"
 import { shallow } from "enzyme"
-import { Clickable } from "./Clickable"
+import { Clickable } from "./index"
 
 const props = {
   onClick: jest.fn(),

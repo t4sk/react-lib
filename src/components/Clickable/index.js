@@ -1,12 +1,12 @@
 import React from "react"
 import PropTypes from "prop-types"
-import styles from "./Clickable.module.css"
+import styles from "./index.module.css"
 
 export function Clickable(props) {
   const { onClick, children } = props
 
   return (
-    <button className={styles.Clickable} onClick={onClick}>
+    <button className={styles.component} onClick={onClick}>
       {children}
     </button>
   )

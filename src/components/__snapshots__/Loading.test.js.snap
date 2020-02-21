@@ -1,20 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`error 1`] = `
-<Message
-  negative={true}
->
-  <p>
-    Error
-  </p>
-  <Button
-    as="button"
-    onClick={[MockFunction]}
-  >
-    Retry
-  </Button>
-</Message>
-`;
+exports[`error 1`] = `"Error"`;
 
 exports[`it renders 1`] = `
 <div>
@@ -22,26 +8,16 @@ exports[`it renders 1`] = `
 </div>
 `;
 
-exports[`loading 1`] = `
-<div>
-  Loading...
-</div>
-`;
+exports[`loading 1`] = `"Loading..."`;
 
 exports[`null 1`] = `""`;
 
-exports[`renderLoading 1`] = `
-<Message
-  negative={true}
->
-  <p>
-    Error
-  </p>
-  <Button
-    as="button"
-    onClick={[MockFunction]}
-  >
-    Retry
-  </Button>
-</Message>
+exports[`render error 1`] = `
+<div>
+  Custom 
+  Error
+   message...
+</div>
 `;
+
+exports[`render loading 1`] = `"Error"`;

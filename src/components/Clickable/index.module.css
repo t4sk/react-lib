@@ -1,4 +1,4 @@
-.Clickable {
+.component {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -7,10 +7,10 @@
   padding: 0;
   text-decoration: none;
 }
-.Clickable:hover {
+.component:hover {
   text-decoration: none;
 }
-.Clickable:focus {
+.componet:focus {
   background-color: transparent;
   outline: 0;
   text-decoration: none;
