@@ -6,7 +6,6 @@ const children = () => <div>children</div>
 const props = {
   loading: false,
   error: "",
-  onClickRetry: jest.fn(),
 }
 
 test("it renders", () => {
@@ -61,16 +60,4 @@ test("render error", () => {
   )
 
   expect(component).toMatchSnapshot()
-})
-
-test("onClickRetry", () => {
-  const component = shallow(
-    <Loading {...props} error="Error">
-      {children}
-    </Loading>
-  )
-
-  component.find("Button").simulate("click")
-
-  expect(props.onClickRetry.mock.calls.length).toEqual(1)
 })
