@@ -1,7 +1,7 @@
 memo
 
 ```
-bit add src/components/MyComponent
+bit add src/components/MyComponent.js
 bit untrack my-component
 bit status
 bit build
