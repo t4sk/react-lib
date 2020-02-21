@@ -36,18 +36,6 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "t4sk.lib/error-messages@0.8.0": {
-        "files": [
-            {
-                "relativePath": "src/components/ErrorMessages.js",
-                "test": false,
-                "name": "ErrorMessages.js"
-            }
-        ],
-        "mainFile": "src/components/ErrorMessages.js",
-        "origin": "AUTHORED",
-        "exported": true
-    },
     "t4sk.lib/form@0.2.2": {
         "files": [
             {
@@ -153,6 +141,30 @@
             }
         ],
         "mainFile": "src/components/withFetch.js",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "t4sk.lib/with-form@0.9.0": {
+        "files": [
+            {
+                "relativePath": "src/components/withForm.js",
+                "test": false,
+                "name": "withForm.js"
+            }
+        ],
+        "mainFile": "src/components/withForm.js",
+        "origin": "AUTHORED",
+        "exported": true
+    },
+    "t4sk.lib/with-subscription@0.9.0": {
+        "files": [
+            {
+                "relativePath": "src/components/withSubscription.js",
+                "test": false,
+                "name": "withSubscription.js"
+            }
+        ],
+        "mainFile": "src/components/withSubscription.js",
         "origin": "AUTHORED",
         "exported": true
     },
