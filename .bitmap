@@ -48,18 +48,6 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "t4sk.lib/loading@0.1.1": {
-        "files": [
-            {
-                "relativePath": "src/components/Loading.js",
-                "test": false,
-                "name": "Loading.js"
-            }
-        ],
-        "mainFile": "src/components/Loading.js",
-        "origin": "AUTHORED",
-        "exported": true
-    },
     "t4sk.lib/scroll-to-top@0.6.0": {
         "files": [
             {
@@ -132,6 +120,18 @@
         "origin": "AUTHORED",
         "exported": true
     },
+    "t4sk.lib/with-auth@0.1.0": {
+        "files": [
+            {
+                "relativePath": "src/components/withAuth.js",
+                "test": false,
+                "name": "withAuth.js"
+            }
+        ],
+        "mainFile": "src/components/withAuth.js",
+        "origin": "AUTHORED",
+        "exported": true
+    },
     "t4sk.lib/with-fetch@0.7.0": {
         "files": [
             {
@@ -156,6 +156,18 @@
         "origin": "AUTHORED",
         "exported": true
     },
+    "t4sk.lib/with-size@0.1.0": {
+        "files": [
+            {
+                "relativePath": "src/components/withSize.js",
+                "test": false,
+                "name": "withSize.js"
+            }
+        ],
+        "mainFile": "src/components/withSize.js",
+        "origin": "AUTHORED",
+        "exported": true
+    },
     "t4sk.lib/with-subscription@0.9.0": {
         "files": [
             {
@@ -168,7 +180,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "t4sk.lib/with-time-zone@0.7.0": {
+    "t4sk.lib/with-time-zone@0.8.0": {
         "files": [
             {
                 "relativePath": "src/components/withTimeZone.js",
