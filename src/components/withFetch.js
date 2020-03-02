@@ -2,7 +2,7 @@ import React, { useEffect } from "react"
 import withAsyncRequest from "./withAsyncRequest"
 
 export default function withFetch(request, settings = {}) {
-  const { name = "fetch", getParams = props => ({}) } = settings
+  const { name = "fetch", getParams = props => [] } = settings
 
   return Component => {
     function Fetch(props) {
@@ -10,7 +10,7 @@ export default function withFetch(request, settings = {}) {
       const { send, pending, error, response } = req
 
       function fetch() {
-        send(getParams(props))
+        send(...getParams(props))
       }
 
       useEffect(() => {
