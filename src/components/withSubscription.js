@@ -51,7 +51,13 @@ export function reducer(state = INITIAL_STATE, action) {
 
 export default function withSubscription(
   subscribe,
-  { name = "subscription", onData = data => ({}), onError = error => ({}) } = {}
+  {
+    name = "subscription",
+    onData = data => ({}),
+    onError = error => ({}),
+    subscribeOnMount = true,
+    getParams = props => [],
+  } = {}
 ) {
   return Component => {
     function Subscription(props) {
@@ -72,11 +78,11 @@ export default function withSubscription(
         dispatch(action)
       }
 
-      function _subscribe(params) {
+      function _subscribe(...params) {
         _dispatch(actions.onConnect())
 
         // NOTE: return unsubscribe
-        return subscribe(params, (error, data) => {
+        return subscribe(...params, (error, data) => {
           if (error) {
             _dispatch(actions.onError(error.message))
             onError(error)
@@ -87,6 +93,12 @@ export default function withSubscription(
           onData(data)
         })
       }
+
+      useEffect(() => {
+        if (subscribeOnMount) {
+          return _subscribe(...getParams(props))
+        }
+      }, [])
 
       return (
         <Component
