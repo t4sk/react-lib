@@ -62,7 +62,10 @@ export default function withSubscription(
   return Component => {
     function Subscription(props) {
       const isMounted = useRef(true)
-      const [state, dispatch] = useReducer(reducer, INITIAL_STATE)
+      const [state, dispatch] = useReducer(reducer, {
+        ...INITIAL_STATE,
+        connecting: subscribeOnMount,
+      })
 
       useEffect(() => {
         return () => {

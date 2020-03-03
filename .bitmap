@@ -168,7 +168,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "t4sk.lib/with-subscription@0.10.0": {
+    "t4sk.lib/with-subscription@0.10.1": {
         "files": [
             {
                 "relativePath": "src/components/withSubscription.js",
