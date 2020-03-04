@@ -36,6 +36,18 @@
         "origin": "AUTHORED",
         "exported": true
     },
+    "t4sk.lib/date-with-time-zone@0.1.0": {
+        "files": [
+            {
+                "relativePath": "src/components/DateWithTimeZone.js",
+                "test": false,
+                "name": "DateWithTimeZone.js"
+            }
+        ],
+        "mainFile": "src/components/DateWithTimeZone.js",
+        "origin": "AUTHORED",
+        "exported": true
+    },
     "t4sk.lib/form@0.2.2": {
         "files": [
             {
