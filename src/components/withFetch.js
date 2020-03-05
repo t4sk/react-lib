@@ -9,12 +9,12 @@ export default function withFetch(request, settings = {}) {
       const { req, ...rest } = props
       const { send, pending, error, response } = req
 
-      function fetch() {
-        send(...getParams(props))
+      function fetch(...params) {
+        send(...params)
       }
 
       useEffect(() => {
-        fetch()
+        fetch(...getParams(props))
       }, [])
 
       return (

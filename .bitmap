@@ -144,7 +144,7 @@
         "origin": "AUTHORED",
         "exported": true
     },
-    "t4sk.lib/with-fetch@1.0.0": {
+    "t4sk.lib/with-fetch@1.1.0": {
         "files": [
             {
                 "relativePath": "src/components/withFetch.js",
