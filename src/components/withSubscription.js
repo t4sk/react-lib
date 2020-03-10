@@ -51,20 +51,14 @@ export function reducer(state = INITIAL_STATE, action) {
 
 export default function withSubscription(
   subscribe,
-  {
-    name = "subscription",
-    onData = data => ({}),
-    onError = error => ({}),
-    subscribeOnMount = true,
-    getParams = props => [],
-  } = {}
+  { name = "subscription", getInitialState = props => ({}) } = {}
 ) {
   return Component => {
     function Subscription(props) {
       const isMounted = useRef(true)
       const [state, dispatch] = useReducer(reducer, {
         ...INITIAL_STATE,
-        connecting: subscribeOnMount,
+        ...getInitialState(props),
       })
 
       useEffect(() => {
@@ -82,26 +76,22 @@ export default function withSubscription(
       }
 
       function _subscribe(...params) {
+        const callback = params.pop()
+
         _dispatch(actions.onConnect())
 
         // NOTE: return unsubscribe
         return subscribe(...params, (error, data) => {
           if (error) {
             _dispatch(actions.onError(error.message))
-            onError(error)
+            callback(error)
             return
           }
 
           _dispatch(actions.onData(data))
-          onData(data)
+          callback(null, data)
         })
       }
-
-      useEffect(() => {
-        if (subscribeOnMount) {
-          return _subscribe(...getParams(props))
-        }
-      }, [])
 
       return (
         <Component
