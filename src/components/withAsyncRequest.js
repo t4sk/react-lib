@@ -95,7 +95,7 @@ export default function withAsyncRequest(request, settings = {}) {
       }
 
       function reset() {
-        _dispatch(INITIAL_STATE)
+        _dispatch(actions.reset())
       }
 
       return (
