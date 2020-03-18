@@ -5,6 +5,7 @@ import withAsyncRequest, { reducer, actions } from "./withAsyncRequest"
 describe("reducer", () => {
   test("onSend", () => {
     expect(reducer(undefined, actions.onSend())).toEqual({
+      sent: true,
       pending: true,
       error: "",
       response: undefined,
@@ -16,6 +17,7 @@ describe("reducer", () => {
     const response = {}
 
     expect(reducer(state, actions.onSuccess(response))).toEqual({
+      sent: true,
       pending: false,
       error: "",
       response,
@@ -27,6 +29,7 @@ describe("reducer", () => {
     const error = "Error"
 
     expect(reducer(state, actions.onError(error))).toEqual({
+      sent: true,
       pending: false,
       error,
       response: undefined,
@@ -56,6 +59,7 @@ test("it renders", () => {
   expect(component.props()).toEqual(
     expect.objectContaining({
       testRequest: {
+        sent: false,
         pending: false,
         error: "",
         response: undefined,
